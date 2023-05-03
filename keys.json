@@ -1,0 +1,19 @@
+{
+    "merchants": {
+        "9999": {
+            "KEY": "31323334353637383930313233343536373839303132333435363738393031323132333435363738393031323334353637383930313233343536373839303132"
+        }
+    },
+    "bank-keys": {
+        "1": {
+            "_": ["from Tatra banka test page"],
+            "PUBLIC_PEM": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEozvFM1FJP4igUQ6kP8ofnY7ydIWksMDk1IKXyr/TRDoX4sTMmmdiIrpmCZD4CLDtP0j2LfD7saSIc8kZUwfILg==\n-----END PUBLIC KEY-----"
+        },
+        "2": {
+            "_": ["from https://keytool.online"],
+            "PUBLIC_PEM": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdMgM40jPaGDYdM0Ie3YExho6E7ihSXd9tHTs/Q4kWrJb1s9xZty/bst3tjbxDWVtCBgW3jrOrQJmQbuht7YjeA==\n-----END PUBLIC KEY-----",
+            "PRIVATE_PEM": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg0g26/FVZEj/f2R4rXRNwboxrDboLyc47a8+R2AcULJihRANCAAR0yAzjSM9oYNh0zQh7dgTGGjoTuKFJd320dOz9DiRaslvWz3Fm3L9uy3e2NvENZW0IGBbeOs6tAmZBu6G3tiN4\n-----END PRIVATE KEY-----",
+            "PRIVATE_PEM_2": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEININuvxVWRI/39keK10TcG6Maw26C8nOO2vPkdgHFCyYoAoGCCqGSM49AwEHoUQDQgAEdMgM40jPaGDYdM0Ie3YExho6E7ihSXd9tHTs/Q4kWrJb1s9xZty/bst3tjbxDWVtCBgW3jrOrQJmQbuht7YjeA==\n-----END EC PRIVATE KEY-----"
+        }
+    }
+}
