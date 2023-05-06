@@ -1,0 +1,200 @@
+@page
+@model TesterWeb.Pages.CardPaySample
+@{
+    ViewData["Title"] = "CardPaySample";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form method="post" class="form-horizontal">
+
+        <div class="row mb-2 mt-4">
+            <h3>1. Request values</h3>
+        </div>
+        
+        <div class="row mb-2 mt-4">
+            <b>Merchant</b>
+        </div>
+        
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">MID</label>
+            <div class="col-sm-10">
+                <select asp-for="P.MID" asp-items="Model.AvailableMIDs" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">RURL</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.RURL" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">REM</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.REM" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>Payment</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">AMT</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.AMT" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">CURR</label>
+            <div class="col-sm-10">
+                <select asp-for="P.CURR" asp-items="Html.GetEnumSelectList<Domain.Currency>()" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">VS</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.VS" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">E2E</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TXN</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TIMESTAMP</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.TIMESTAMP" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>User (card holder)</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">NAME</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.NAME" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">IPC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.IPC" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TDS_*</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>ComfortPay registration</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TPAY, CID, ECID</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>UI/UX</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">AREDIR</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">LANG</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+
+
+        <div class="row mb-2 mt-4">
+            <h3>
+                2. HMAC calculation
+                <button asp-page-handler="CalculateHMAC" class="btn btn-primary">Calculate HMAC</button>
+            </h3>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">Input for HMAC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="HMAC_input" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">HMAC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="P.HMAC" class="form-control" />
+            </div>
+        </div>
+        
+
+        
+        <div class="row mb-2 mt-4">
+            <h3>
+                3. Redirect to payment gate
+                <button asp-page-handler="GenerateUrl" 
+                    class="btn @(string.IsNullOrWhiteSpace(Model.PaymentUrl) ? "btn-primary" : "btn-secondary")"
+                    >3.1 Generate URL</button>
+                <button type="button" onclick="OpenUrl()"
+                    class="btn @(string.IsNullOrWhiteSpace(Model.PaymentUrl) ? "btn-secondary" : "btn-primary")"
+                    >3.2 Open URL</button>
+            </h3>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">Payment URL</label>
+            <div class="col-sm-10">
+                <textarea id="PaymentUrl" asp-for="PaymentUrl" class="form-control" rows="10"></textarea>
+            </div>
+        </div>
+
+
+    </form>
+
+    <script type="text/javascript">
+        function OpenUrl()
+        {
+            let url = document.getElementById("PaymentUrl").textContent;
+            url = url.replace(/\s/gmi, "");
+            window.open(url, "_blank");
+        }
+    </script>
+</div>

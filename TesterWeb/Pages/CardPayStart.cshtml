@@ -1,0 +1,344 @@
+@page
+@model TesterWeb.Pages.CardPayStart
+@{
+    ViewData["Title"] = "CardPayStart";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <form method="post" class="form-horizontal">
+
+        @Html.HiddenFor(m => m.P.AMT)
+        @Html.HiddenFor(m => m.P.CID)
+        @Html.HiddenFor(m => m.P.CURR)
+        @Html.HiddenFor(m => m.P.E2E)
+        @Html.HiddenFor(m => m.P.ECID)
+        @Html.HiddenFor(m => m.P.IPC)
+        @Html.HiddenFor(m => m.P.HMAC)
+        @Html.HiddenFor(m => m.P.MID)
+        @Html.HiddenFor(m => m.P.NAME)
+        @Html.HiddenFor(m => m.P.REM)
+        @Html.HiddenFor(m => m.P.RURL)
+        @Html.HiddenFor(m => m.P.TIMESTAMP)
+        @Html.HiddenFor(m => m.P.TPAY)
+        @Html.HiddenFor(m => m.P.TXN)
+        @Html.HiddenFor(m => m.P.VS)
+
+
+
+        <div class="row mb-2 mt-4">
+            <h3>1. Request values</h3>
+        </div>
+
+        <div class="row mt-2">
+            <b>Merchant</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">MID</label>
+            <div class="col-sm-10">@Model.P.MID</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">RURL</label>
+            <div class="col-sm-10">@Model.P.RURL</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TIMESTAMP</label>
+            <div class="col-sm-10">@Model.P.TIMESTAMP</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">REM</label>
+            <div class="col-sm-10">@Model.P.REM</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>Payment</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">AMT</label>
+            <div class="col-sm-10">@Model.P.AMT</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">CURR</label>
+            <div class="col-sm-10">@Model.P.CURR</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">VS</label>
+            <div class="col-sm-10">@Model.P.VS</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">E2E</label>
+            <div class="col-sm-10">@(Model.P.E2E ? "Y" : "N")</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TXN</label>
+            <div class="col-sm-10">@Model.P.TXN</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>User (card holder)</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">NAME</label>
+            <div class="col-sm-10">@Model.P.NAME</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">IPC</label>
+            <div class="col-sm-10">@Model.P.IPC</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TDS_*</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>ComfortPay registration</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TPAY</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">CID</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">ECID</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>UI/UX</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">AREDIR</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">LANG</label>
+            <div class="col-sm-10">not implemented</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>Security</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">HMAC</label>
+            <div class="col-sm-10">
+                @Model.P.HMAC
+                @if (Model.P.HMAC == Model.P_HMAC_expected) {
+                    <span class="badge bg-success">OK</span>
+                } else {
+                    <span class="badge bg-danger">Mismatch</span>
+                }
+            </div>
+        </div>
+        
+        @if (Model.P.HMAC != Model.P_HMAC_expected) {
+            <div class="row">
+                <label class="col-sm-2">HMAC (input)</label>
+                <div class="col-sm-10">@Model.P_HMAC_input</div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2">HMAC (expected)</label>
+                <div class="col-sm-10">@Model.P_HMAC_expected</div>
+            </div>
+        }
+
+
+
+        <div class="row mb-2 mt-4">
+            <h3>2. Response values</h3>
+        </div>
+
+        <div class="row mb-2 mt-4">
+            <b>Payment</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">AMT</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.AMT" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">CURR</label>
+            <div class="col-sm-10">
+                <select asp-for="R.CURR" asp-items="Html.GetEnumSelectList<Domain.Currency>()" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">VS</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.VS" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TXN</label>
+            <div class="col-sm-10">
+                not implemented
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TIMESTAMP</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.TIMESTAMP" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>Result</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">RES</label>
+            <div class="col-sm-10">
+                <select asp-for="R.RES" asp-items="Html.GetEnumSelectList<Domain.PaymentResult>()" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">AC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.AC" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">RC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.RC" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TID</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.TID" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">CC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.CC" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="row mb-2 mt-4">
+            <b>ComfortPay result</b>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">TRES</label>
+            <div class="col-sm-10">
+                <select asp-for="R.TRES" asp-items="Html.GetEnumSelectList<Domain.PaymentResult>()" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">CID</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.CID" class="form-control" />
+            </div>
+        </div>
+        
+        
+        
+        <div class="row mb-2 mt-4">
+            <h3>
+                3. HMAC & ECDSA calculation
+                <button asp-page-handler="CalculateHMAC" class="btn btn-primary">Calculate</button>
+            </h3>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">Input for HMAC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R_HMAC_input" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">HMAC</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.HMAC" class="form-control" />
+            </div>
+        </div>
+        
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">ECDSA_KEY</label>
+            <div class="col-sm-10">
+                <select asp-for="R.ECDSA_KEY" asp-items="Model.AvailableECDSA_KEYs" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">ECDSA</label>
+            <div class="col-sm-10">
+                <input type="text" asp-for="R.ECDSA" class="form-control" />
+            </div>
+        </div>
+        
+
+        
+        <div class="row mb-2 mt-4">
+            <h3>
+                4. Redirect back to merchant
+                <button asp-page-handler="GenerateUrl" 
+                    class="btn @(string.IsNullOrWhiteSpace(Model.ReturnUrl) ? "btn-primary" : "btn-secondary")"
+                    >4.1 Generate URL</button>
+                <button type="button" onclick="OpenUrl()"
+                    class="btn @(string.IsNullOrWhiteSpace(Model.ReturnUrl) ? "btn-secondary" : "btn-primary")"
+                    >4.2 Open URL</button>
+            </h3>
+        </div>
+
+        <div class="row mb-2">
+            <label class="col-sm-2 col-form-label">Return URL</label>
+            <div class="col-sm-10">
+                <textarea id="ReturnUrl" asp-for="ReturnUrl" class="form-control" rows="10"></textarea>
+            </div>
+        </div>
+
+    </form>
+
+    <script type="text/javascript">
+        function OpenUrl()
+        {
+            let url = document.getElementById("ReturnUrl").textContent;
+            url = url.replace(/\s/gmi, "");
+            window.open(url, "_blank");
+        }
+    </script>
+</div>
