@@ -83,6 +83,11 @@ namespace TesterWeb.Pages
         {
             EnsureLoaded();
 
+            if (string.IsNullOrEmpty(P.HMAC))
+            {
+                OnPostCalculateHMAC();
+            }
+
             var sb = new StringBuilder();
             sb.Append("./CardPayStart");
             sb.AddQuery("MID", P.MID);
@@ -105,7 +110,8 @@ namespace TesterWeb.Pages
             // LANG
 
             PaymentUrl = sb.ToString();
-
+            State.LastMID = P.MID;
+            
             ModelState.Clear();
         }
     }

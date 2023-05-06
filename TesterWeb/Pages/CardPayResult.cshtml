@@ -1,11 +1,153 @@
 @page
 @model TesterWeb.Pages.CardPayResult
 @{
-    ViewData["Title"] = "CardPayResult";
+    ViewData["Title"] = "CardPay - Response From Bank";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <div>
-    TODO
+    <form method="post" class="form-horizontal">
+    
+
+        <div class="row mb-2 mt-4">
+            <h3>1. Response values</h3>
+        </div>
+
+        <div class="row mt-2">
+            <b>Payment</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">AMT</label>
+            <div class="col-sm-10">@Model.R.AMT</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">CURR</label>
+            <div class="col-sm-10">@Model.R.CURR</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">VS</label>
+            <div class="col-sm-10">@Model.R.VS</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TXN</label>
+            <div class="col-sm-10">@Model.R.TXN</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TIMESTAMP</label>
+            <div class="col-sm-10">@Model.R.TIMESTAMP</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>Result</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">RES</label>
+            <div class="col-sm-10">@Model.R.RES</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">AC</label>
+            <div class="col-sm-10">@Model.R.AC</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">RC</label>
+            <div class="col-sm-10">@Model.R.RC</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TID</label>
+            <div class="col-sm-10">@Model.R.TID</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">CC</label>
+            <div class="col-sm-10">@Model.R.CC</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>ComfortPay result</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">TRES</label>
+            <div class="col-sm-10">@Model.R.TRES</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">CID</label>
+            <div class="col-sm-10">@Model.R.CID</div>
+        </div>
+
+
+        <div class="row mt-2">
+            <b>Security</b>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">HMAC</label>
+            <div class="col-sm-10 long-key">
+                @if (Model.R.HMAC == Model.R_HMAC_expected) {
+                    <span class="badge bg-success">OK</span>
+                } else {
+                    <span class="badge bg-danger">Mismatch</span>
+                }
+
+                @Model.R.HMAC
+            </div>
+        </div>
+        
+        @if (Model.R.HMAC != Model.R_HMAC_expected) {
+            <div class="row">
+                <label class="col-sm-2">HMAC (input)</label>
+                <div class="col-sm-10 long-key">@Model.R_HMAC_input</div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2">HMAC (expected)</label>
+                <div class="col-sm-10 long-key">@Model.R_HMAC_expected</div>
+            </div>
+        }
+        
+        <div class="row">
+            <label class="col-sm-2">ECDSA_KEY</label>
+            <div class="col-sm-10">@Model.R.ECDSA_KEY</div>
+        </div>
+        
+        <div class="row">
+            <label class="col-sm-2">ECDSA</label>
+            <div class="col-sm-10 long-key">
+                @if (Model.R_ECDSA_isValid) {
+                    <span class="badge bg-success">OK</span>
+                } else {
+                    <span class="badge bg-danger">Mismatch</span>
+                }
+
+                @Model.R.ECDSA
+            </div>
+        </div>
+        
+        <div class="row mt-2">
+            <div class="alert alert-danger" role="alert">
+                Client <b>SHOULD</b> verify following:
+                <ul>
+                    <li>AMT, CURR, VS, TXN, and TIMESTAMP must match exactly with original request</li>
+                    <li>RES (and optionally TRES) are set to OK</li>
+                    <li>HMAC of the response was calculated using merchant's KEY</li>
+                    <li>ECDSA can be verified with bank's public key corresponding to ECDSA_KEY; and this public key is still valid</li>
+                </ul>
+            </div>
+        </div>
+
+
+    </form>
 </div>

@@ -20,13 +20,13 @@ namespace TesterWeb.Pages
         }
 
         private bool _isLoaded;
-
         private readonly ILogger<CardPayStart> _logger;
 
         public List<SelectListItem> AvailableECDSA_KEYs{get;set;} = new ();
 
         [BindProperty]
         public CardPayRequest P{get;set;} = new();
+        
         public string P_HMAC_expected{get;set;}
         public string P_HMAC_input{get;set;}
 
@@ -65,7 +65,7 @@ namespace TesterWeb.Pages
             P.CURR = string.IsNullOrEmpty(Request.Query["CURR"])
                 ? Currency.None
                 : Enum.Parse<Currency>(Request.Query["CURR"]);
-            // E2E
+            P.E2E = Request.Query["E2E"] == "Y";
             // ECID
             P.IPC = Request.Query["IPC"];
             P.HMAC = Request.Query["HMAC"];
@@ -78,6 +78,7 @@ namespace TesterWeb.Pages
             // TXN
             P.VS = Request.Query["VS"];
 
+            // these values must match the request, but can be modified to test some invalid responses
             R.AMT = P.AMT;
             R.CURR = P.CURR;
             R.VS = P.VS;
@@ -91,6 +92,8 @@ namespace TesterWeb.Pages
         {
             EnsureLoaded();
 
+            // MID comes from request
+            // ECDSA_KEY can be selected (first with private key is pre-selected)
             R_HMAC_input = R.GetInputForHMAC();
             R.HMAC = Crypto.ConvertByteArrayToHexString(
                 Crypto.CalculateHMAC(R_HMAC_input, Keys.KEYo(P.MID)));
@@ -110,6 +113,11 @@ namespace TesterWeb.Pages
         public void OnPostGenerateUrl()
         {
             EnsureLoaded();
+
+            if (string.IsNullOrEmpty(P.HMAC))
+            {
+                OnPostCalculateHMAC();
+            }
 
             var sb = new StringBuilder();
             sb.Append(P.RURL);
@@ -132,6 +140,69 @@ namespace TesterWeb.Pages
             ReturnUrl = sb.ToString();
 
             ModelState.Clear();
+        }
+
+        public void OnPostSetResultFail()
+        {
+            EnsureLoaded();
+
+            var random = new Random();
+            const string alphaNumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+
+            R.RES = PaymentResult.FAIL;
+            R.AC = "";
+            R.CC = "";
+            R.RC = string.Join("", Enumerable.Range(1, 2)
+                        .Select(_=>alphaNumeric[random.Next(alphaNumeric.Length - 1)]));
+            R.TID = random.NextInt64(0, 10_000_000_000).ToString(); // up to 10 digits
+
+            if (P.TPAY)
+            {
+                R.TRES = PaymentResult.FAIL;
+                R.CID = "";
+            }
+            else
+            {
+                R.TRES = PaymentResult.None;
+                R.CID = "";
+            }
+
+            // prepare all next steps
+            ModelState.Clear();
+            OnPostCalculateHMAC();
+            OnPostGenerateUrl();
+        }
+
+        public void OnPostSetResultOk()
+        {
+            EnsureLoaded();
+
+            var random = new Random();
+            const string alphaNumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
+
+            R.RES = PaymentResult.OK;
+            R.AC = string.Join("", Enumerable.Range(1, 6)
+                        .Select(_=>alphaNumeric[random.Next(alphaNumeric.Length)]))
+                        .Trim();
+            R.CC = $"{random.Next(1000, 10000):0000} {random.Next(0, 100):00}** **** {random.Next(0, 10000):0000}";
+            R.RC = "";
+            R.TID = random.NextInt64(0, 10_000_000_000).ToString(); // up to 10 digits
+
+            if (P.TPAY)
+            {
+                R.TRES = PaymentResult.OK;
+                R.CID = "xxx";
+            }
+            else
+            {
+                R.TRES = PaymentResult.None;
+                R.CID = "";
+            }
+
+            // prepare all next steps
+            ModelState.Clear();
+            OnPostCalculateHMAC();
+            OnPostGenerateUrl();
         }
     }
 }
